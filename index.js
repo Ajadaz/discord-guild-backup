@@ -1,5 +1,6 @@
 import fetch from "node-fetch";
 import fs from "fs/promises";
+import { fetchWithDiscordAuth } from "./util.js";
 
 const DISCORD_API_ENDPOINT = "https://discord.com/api/v10";
 
@@ -15,10 +16,8 @@ if(!process.env.AUTH_TOKEN)
     process.exit(1);
 }
 
-const guild = await fetch(`${DISCORD_API_ENDPOINT}/guilds/${process.argv[2]}`, {
-    headers: {
-        "Authorization": `Bot ${process.env.AUTH_TOKEN}`
-    }
-});
+const guild = await fetchWithDiscordAuth(`${DISCORD_API_ENDPOINT}/guilds/${process.argv[2]}`);
 
-console.log(await guild.json());
+const channels = await fetchWithDiscordAuth(`${DISCORD_API_ENDPOINT}/guilds/${process.argv[2]}/channels`);
+
+console.log(await channels.json());
